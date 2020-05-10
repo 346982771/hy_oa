@@ -1,0 +1,128 @@
+{include file="common/head"/}
+<div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>{$title}</legend>
+    </fieldset>
+    <div class="layui-form layui-form-pane">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名称</label>
+            <div class="layui-input-block">
+                <input type="text" value="{$program_info['title']}" lay-verify="required" placeholder="{:lang('pleaseEnter')}工期（天）" class="layui-input">
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工期</label>
+            <div class="layui-input-block">
+                <input type="text" value="{$program_info['work_date']}" lay-verify="required" placeholder="{:lang('pleaseEnter')}工期（天）" class="layui-input">
+            </div>
+        </div>
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>项目进度</legend>
+        </fieldset>
+        {volist name="program_log" id="vo"}
+        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+            <legend>岗位：{if $vo.station == 1}UI{/if}
+                {if $vo.station == 2}前端{/if}
+                {if $vo.station == 3}后端{/if}
+                {if $vo.station == 4}IOS{/if}
+                {if $vo.station == 5}Android{/if}
+                {if $vo.station == 6}测试{/if}</legend>
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" value="{$vo['username']}"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">时间</label>
+                <div class="layui-input-block">
+                    <input type="text" value="<?php echo date('Y-m-d H:i:s',$vo['create_time']) ?>"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">进度</label>
+                <div class="layui-input-block">
+                    <input style="color: red" type="text" value="{$vo['speed']}"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">内容</label>
+                <div class="layui-input-block">
+                    <textarea name="content"  class="layui-textarea">{$vo['content']}</textarea>
+                </div>
+            </div>
+        </fieldset>
+        {/volist}
+
+
+    </div>
+</div>
+{include file="common/foot"/}
+<script src="/public/static/admin/jquery/jquery.min.js"></script>
+<script src="__STATIC__/common/js/angular.min.js"></script>
+<!--引用富文本-->
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.js"></script>
+<script>
+    var m = angular.module('hd', []);
+    m.controller('ctrl', ['$scope', function ($scope) {
+        $scope.field = '{$info}' != 'null' ? {$info} : {id: '', title: '', url: '',recommendation: 0, sort:50, img: '',hide: 1,recommendation: 0};
+        layui.use(['form', 'layer', 'upload','laydate'], function () {
+            var form = layui.form, $ = layui.jquery, upload = layui.upload, laydate = layui.laydate;
+
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#imgBtn'
+                , url: '{:url("UpFiles/upload")}'
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#img_src').attr('src', result); //图片链接（base64）
+                    });
+                }
+                , done: function (res) {
+                    //上传成功
+                    if (res.code > 0) {
+
+                        $('#img').attr('value',res.url);
+
+                    } else {
+                        //如果上传失败
+                        return layer.msg('上传失败');
+                    }
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function () {
+                        uploadInst.upload();
+                    });
+                }
+            });
+
+            form.on('submit(submit)', function (data) {
+                // 提交到方法 默认为本身
+                data.field.ad_id = $scope.field.ad_id;
+                var loading = layer.load(1, {shade: [0.1, '#fff']});
+                $.post("", data.field, function (res) {
+                    layer.close(loading);
+                    if (res.code > 0) {
+                        layer.msg(res.msg, {time: 1800, icon: 1}, function () {
+                            location.href = res.url;
+                        });
+                    } else {
+                        layer.msg(res.msg, {time: 1800, icon: 2});
+                    }
+                });
+            });
+            var ua = UE.getEditor('container1', {});
+            ua.addListener("ready", function () {
+                // editor准备好之后才可以使用
+                ua.setContent($scope.field.content);
+            });
+        });
+    }]);
+</script>

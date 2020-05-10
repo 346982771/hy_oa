@@ -1,0 +1,6 @@
+{
+  "require": {
+    "workerman/workerman-for-win": "^3.5",
+    "topthink/think-worker": "^2.0"
+  }
+}

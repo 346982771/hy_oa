@@ -1,0 +1,188 @@
+{include file="common/head"/}
+
+<div class="admin-main layui-anim layui-anim-upbit">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>用户列表</legend>
+    </fieldset>
+
+    <form class="layui-form layui-form-pane" action="">
+        &nbsp;&nbsp;
+
+
+        &nbsp;&nbsp;<div class="layui-inline">
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <select name="group_id" lay-verify="required" lay-search="group_id" id="group_id">
+                    <option value="0">全部</option>
+                    {volist name='data' id='v'}
+                    <option value="{$v.group_id}">{$v.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <button class="layui-btn" id="screen" data-type="reload">筛选</button>
+    </div>
+    </form>
+    <br><br>
+    <div class="demoTable">
+        <div class="layui-inline">
+            <input class="layui-input" name="key" id="key" placeholder="{:lang('pleaseEnter')}关键字">
+        </div>
+        <button class="layui-btn" id="search" data-type="reload">搜索</button>
+        <a href="{:url('adminList')}" class="layui-btn">重置</a>
+        <!--<button type="button" class="layui-btn layui-btn-danger" id="delAll">批量删除</button>-->
+
+            <a href="{:url('adminAdd')}" class="layui-btn" style="float:right;">{:lang('add')}用户</a>
+
+        <div style="clear: both;"></div>
+    </div>
+    <table class="layui-table" id="list" lay-filter="list"></table>
+</div>
+
+
+
+{include file="common/foot"/}
+<script type="text/html" id="barDemo">
+    <a href="{:url('adminEdit')}?admin_id={{d.admin_id}}" class="layui-btn layui-btn-xs" >{:lang('edit')}</a>
+    {{# if(d.admin_id==1){ }}
+    <a href="#" class="layui-btn layui-btn-xs layui-btn-disabled">{:lang('del')}</a>
+    {{# }else{  }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">{:lang('del')}</a>
+    {{# } }}
+</script>
+<!--<script type="text/html" id="open">
+    {{# if(d.admin_id==1){ }}
+        <input type="checkbox" disabled name="is_open" value="{{d.admin_id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" checked>
+    {{# }else{  }}
+        <input type="checkbox" name="is_open" value="{{d.admin_id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" {{ d.is_open == 1 ? 'checked' : '' }}>
+    {{# } }}
+</script>-->
+
+<script type="text/html" id="img">
+    {{# if(d.img){ }}
+    <a class="layui-btn layui-btn-xs" href="{{d.img}}" target="_blank">查看大图</a>
+    {{# }else{  }}
+    暂无头像
+    {{# } }}
+</script>
+<script type="text/html" id="station">
+    {{# if(d.station == 0){ }}
+    管理者
+    {{# }else if(d.station == 1){  }}
+    UI
+    {{# }else if(d.station == 2){  }}
+    前端
+    {{# }else if(d.station == 3){  }}
+    后端
+    {{# }else if(d.station == 4){  }}
+    IOS
+    {{# }else if(d.station == 5){  }}
+    安卓
+    {{# }else if(d.station == 6){  }}
+    测试
+    {{# } }}
+</script>
+<script>
+    layui.use(['table','form'], function() {
+        var table = layui.table,form = layui.form,$ = layui.jquery;
+        var tableIn = table.render({
+            id: 'admin',
+            elem: '#list',
+            url: '{:url("adminList")}',
+            method:'post',
+            page:true,
+            cols: [[
+//                {type: "checkbox", fixed: true},
+                {field: 'admin_id', align:'center',title: '{:lang("id")}', width: 90, fixed: true},
+                {field:'loginname', title: '用户名', width:180,fixed: true},
+                {field:'img', title: '头像', width:180,toolbar:'#img'},
+                {field:'username', title: '昵称', width:200},
+                {field:'title', title: '角色', width:150},
+                {field:'mobile', title: '{:lang("tel")}', width:150},
+                {field:'sex', title: '性别', width:100},
+                {field:'station', title: '岗位', width:200,toolbar:'#station'},
+                /*{field:'birthday', title: '生日', width:200},
+                {field:'ip', title: '{:lang("ip")}',width:150},
+                {field:'is_open', title: '{:lang("status")}',width:150,toolbar: '#open'},*/
+                {field:'create_time', title: '创建时间', width:180},
+                {width:160, title:'操作',align:'center', toolbar: '#barDemo'}
+            ]],
+            limit:10
+        });
+        form.on('switch(open)', function(obj){
+            loading =layer.load(1, {shade: [0.1,'#fff']});
+            var id = this.value;
+            var is_open = obj.elem.checked===true?1:0;
+            $.post('{:url("adminState")}',{'id':id,'is_open':is_open},function (res) {
+                layer.close(loading);
+                if (res.status==1) {
+                    tableIn.reload();
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                    return false;
+                }
+            })
+        });
+
+        //筛选
+        $('#screen').on('click', function () {
+            var group_id=$("#group_id").find("option:selected").val();
+            tableIn.reload({
+                where: {group_id: group_id}
+            });
+            return false
+        });
+
+        //搜索
+        $('#search').on('click', function() {
+            var key = $('#key').val();
+            if($.trim(key)==='') {
+                layer.msg('{:lang("pleaseEnter")}关键字！',{icon:0});
+                return;
+            }
+            tableIn.reload({
+                where: {key: key}
+            });
+        });
+        table.on('tool(list)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('{:lang("Are you sure you want to delete it")}', function(index){
+                    $.post("{:url('adminDel')}",{admin_id:data.admin_id},function(res){
+                        if(res.code==1){
+                            layer.msg(res.msg,{time:1000,icon:1});
+                            obj.del();
+                        }else{
+                            layer.msg(res.msg,{time:1000,icon:2});
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        $('#delAll').click(function(){
+            layer.confirm('确认要删除选中的用户吗？', {icon: 3}, function(index) {
+                layer.close(index);
+                var checkStatus = table.checkStatus('admin'); //test即为参数id设定的值
+                var ids = [];
+                $(checkStatus.data).each(function (i, o) {
+                    ids.push(o.admin_id);
+                });
+                var loading = layer.load(1, {shade: [0.1, '#fff']});
+                $.post("{:url('delall')}", {ids: ids}, function (data) {
+                    layer.close(loading);
+                    if (data.code === 1) {
+                        layer.msg(data.msg, {time: 1000, icon: 1});
+                        tableIn.reload();
+                    } else {
+                        layer.msg(data.msg, {time: 1000, icon: 2});
+                    }
+                });
+            });
+        })
+
+
+
+    });
+</script>

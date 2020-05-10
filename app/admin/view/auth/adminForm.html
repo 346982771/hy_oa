@@ -1,0 +1,178 @@
+{include file="common/head"/}
+<div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>{$title}</legend>
+    </fieldset>
+
+    <form class="layui-form layui-form-pane">
+
+        {if condition="count($group) eq 0"}
+        <a href="{:url('admin/auth/groupAdd')}" class="layui-btn"><i class="fa fa-plus" aria-hidden="true"></i>请先添加角色</a>
+        <br><br>
+        {else /}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-4">
+                <!--<select name="group_id" lay-verify="required" ng-model="selected" ng-options="v.group_id as v.title for v in group track by v.group_id">-->
+                    <!--<option value="">请选择角色</option>-->
+                <!--</select>-->
+                {volist name="group" id="vo"}
+                <input {if condition="is_array($selected) && in_array($vo['group_id'],$selected)"}checked {/if} type="checkbox" name="group_id[]" lay-skin="primary" value="{$vo.group_id}" title="{$vo.title}">
+                {/volist}
+            </div>
+            <div class="layui-form-mid layui-word-aux"> <span  style="color: red">*</span> 此项为必填项</div>
+        </div>
+
+
+        {/if}
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{:lang('username')}</label>
+            <div class="layui-input-4">
+                <input type="text" name="loginname" ng-model="field.loginname" lay-verify="required" placeholder="{:lang('pleaseEnter')}登录用户名" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux"> <span  style="color: red">*</span> 请填写登录用户名</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">{:lang('pwd')}</label>
+            <div class="layui-input-4">
+                <input type="password" name="password" placeholder="{:lang('pleaseEnter')}登录密码" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux"> <span  style="color: red">*</span> 此项为必填项</div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-4">
+                <input type="text" name="username" ng-model="field.username" lay-verify="required" placeholder="{:lang('pleaseEnter')}昵称" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux"><span  style="color: red">*</span> 限制输入10个字符</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">岗位</label>
+            <div class="layui-input-inline" style="z-index: 9997;">
+                <select name="station" lay-verify="required" lay-filter="station">
+                    <option value="0" {if condition=" (isset($info_1['station'])) && ($info_1['station'] == 0)"}selected{/if}>管理者</option>
+                    <option value="1" {if condition=" (isset($info_1['station'])) && ($info_1['station'] == 1)"}selected{/if}>UI</option>
+                    <option value="2" {if condition=" (isset($info_1['station'])) && ($info_1['station'] == 2)"}selected{/if}>前端</option>
+                    <option value="3" {if condition=" (isset($info_1['station'])) && ($info_1['station'] == 3)"}selected{/if}>后端</option>
+                    <option value="4" {if condition=" (isset($info_1['station'])) && ($info_1['station'] == 4)"}selected{/if}>IOS</option>
+                    <option value="5" {if condition=" (isset($info_1['station'])) && ($info_1['station'] == 5)"}selected{/if}>安卓</option>
+                    <option value="6" {if condition=" (isset($info_1['station'])) && ($info_1['station'] == 6)"}selected{/if}>测试</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">{:lang('tel')}</label>
+            <div class="layui-input-4">
+                <input type="text" name="mobile" ng-model="field.mobile" value="" placeholder="{:lang('pleaseEnter')}手机号" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">性别<span  style="color: red">*</span></label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" ng-model="field.sex" ng-checked="field.sex==0" ng-value="0" title="男" >
+                <input type="radio" name="sex" ng-model="field.sex" ng-checked="field.sex==1" ng-value="1" title="女" >
+
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+            <!--<div class="layui-inline">-->
+                <!--<label class="layui-form-label">生日<span  style="color: red">*</span></label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<input type="text" name="birthday" id="date1" autocomplete="off" class="layui-input" lay-verify="required" ng-model="field.birthday">-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像</label>
+            <input type="hidden" name="img" id="img" value="{{field.img}}">
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-primary" id="adBtn"><i class="icon icon-upload3"></i>点击上传</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="adPic">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
+                <a href="{:url('adminList')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+{include file="common/foot"/}
+<script src="__STATIC__/common/js/angular.min.js"></script>
+<script>
+    var m = angular.module('hd',[]);
+    m.controller('ctrl',['$scope',function($scope) {
+        $scope.field = '{$info}'!='null'?{$info}:{group_id:'',username:'',loginname:'',mobile:'',img:'',sex:0,birthday: '',is_shop:0,};
+        $scope.group = {$authGroup};
+        $scope.selected = {$selected};
+        layui.use(['form', 'layer','upload','laydate'], function () {
+            var form = layui.form, layer = layui.layer,$= layui.jquery,upload = layui.upload, laydate = layui.laydate;
+            if ($scope.field.img) {
+                adPic.src =  $scope.field.img;
+            }
+			form.render();
+            form.on('submit(submit)', function (data) {
+                loading =layer.load(1, {shade: [0.1,'#fff']});
+                data.field.admin_id = $scope.field.admin_id;
+                $.post("", data.field, function (res) {
+                    layer.close(loading);
+                    if (res.code > 0) {
+                        layer.msg(res.msg, {time: 1800, icon: 1}, function () {
+                            location.href = res.url;
+                        });
+                    } else {
+                        layer.msg(res.msg, {time: 1800, icon: 2});
+                    }
+                });
+            });
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#adBtn'
+                , url: '{:url("UpFiles/upload")}'
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#adPic').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function (res) {
+                    if (res.status > 0) {
+                        $('#img').val(res.data.url);
+                    } else {
+                        //如果上传失败
+                        return layer.msg('上传失败');
+                    }
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function () {
+                        uploadInst.upload();
+                    });
+                }
+            });
+            laydate.render({
+                elem: '#date1'
+                ,type: 'datetime'
+            });
+        });
+    }]);
+</script>

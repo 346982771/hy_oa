@@ -1,0 +1,248 @@
+{include file="common/head"/}
+<div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>{$title}</legend>
+    </fieldset>
+    <div class="layui-form layui-form-pane">
+        <form>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题<span  style="color: red">*</span></label>
+            <div class="layui-input-block">
+                <input type="text" name="title" ng-model="field.title" lay-verify="required" placeholder="{:lang('pleaseEnter')}名称" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工期<span  style="color: red">*</span></label>
+            <div class="layui-input-block">
+                <input type="text" name="work_date" ng-model="field.work_date" lay-verify="required" placeholder="{:lang('pleaseEnter')}工期（天）" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">UI</label>
+            <div class="layui-input-inline" style="z-index: 9998;">
+                <select name="station1" lay-filter="station1">
+                    <option value="">无</option>
+                    {volist name="user_list" id="vo"}
+                    {if $vo.station == 1}
+                    <option value="{$vo.admin_id}"
+                            {volist name="program_user_list" id="vi"}
+                            {if $vi.user_id == $vo.admin_id}selected{/if}
+                            {/volist}
+                    >{$vo.username}</option>
+                    {/if}
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">前端</label>
+            <div class="layui-input-inline" style="z-index: 9997;">
+                <select name="station2" lay-filter="station2">
+                    <option value="">无</option>
+                    {volist name="user_list" id="vo"}
+                    {if $vo.station == 2}
+                    <option value="{$vo.admin_id}"
+                        {volist name="program_user_list" id="vi"}
+                        {if $vi.user_id == $vo.admin_id}selected{/if}
+                        {/volist}
+                    >{$vo.username}</option>
+                    {/if}
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">后端</label>
+            <div class="layui-input-inline" style="z-index: 9996;">
+                <select name="station3" lay-filter="station3">
+                    <option value="">无</option>
+                    {volist name="user_list" id="vo"}
+                    {if $vo.station == 3}
+                    <option value="{$vo.admin_id}"
+                        {volist name="program_user_list" id="vi"}
+                        {if $vi.user_id == $vo.admin_id}selected{/if}
+                        {/volist}
+                    >{$vo.username}</option>
+                    {/if}
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">IOS</label>
+            <div class="layui-input-inline" style="z-index: 9995;">
+                <select name="station4" lay-filter="station4">
+                    <option value="">无</option>
+                    {volist name="user_list" id="vo"}
+                    {if $vo.station == 4}
+                    <option value="{$vo.admin_id}"
+                        {volist name="program_user_list" id="vi"}
+                        {if $vi.user_id == $vo.admin_id}selected{/if}
+                        {/volist}
+                    >{$vo.username}</option>
+                    {/if}
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">android</label>
+            <div class="layui-input-inline" style="z-index: 9994;">
+                <select name="station5" lay-filter="station5">
+                    <option value="">无</option>
+                    {volist name="user_list" id="vo"}
+                    {if $vo.station == 5}
+                    <option value="{$vo.admin_id}"
+                        {volist name="program_user_list" id="vi"}
+                        {if $vi.user_id == $vo.admin_id}selected{/if}
+                        {/volist}
+                    >{$vo.username}</option>
+                    {/if}
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">测试</label>
+            <div class="layui-input-inline" style="z-index: 9993;">
+                <select name="station6" lay-filter="station6">
+                    <option value="">无</option>
+                    {volist name="user_list" id="vo"}
+                    {if $vo.station == 6}
+                    <option value="{$vo.admin_id}"
+                            {volist name="program_user_list" id="vi"}
+                            {if $vi.user_id == $vo.admin_id}selected{/if}
+                    {/volist}
+                    >{$vo.username}</option>
+                    {/if}
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">提醒</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<textarea name="content" ng-model="field.content" class="layui-textarea" placeholder="{:lang('pleaseEnter')}提醒"></textarea>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">图片</label>-->
+            <!--<input type="hidden" name="img" id="img" value="{{field.img}}">-->
+            <!--<div class="layui-input-block">-->
+                <!--<div class="layui-upload">-->
+                    <!--<button type="button" class="layui-btn layui-btn-primary" id="imgBtn"><i class="icon icon-upload3"></i>点击上传-->
+                    <!--</button>-->
+                    <!--<div class="layui-upload-list">-->
+                        <!--<img class="layui-upload-img" id="img_src">-->
+                        <!--<p id="demoText"></p>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">{:lang('order')}<span  style="color: red">*</span></label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="text" name="sort" ng-model="field.sort" value="" placeholder="从大到小排序" class="layui-input" lay-verify="required">-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">介绍</label>
+            <div class="layui-input-block">
+                <div class="controls" id="discripContainers1">
+                    <script id="container1" name="content" type="text/plain">
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">显示<span  style="color: red">*</span></label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="radio" name="hide" ng-model="field.hide" ng-checked="field.hide==1" ng-value="1" title="是" >-->
+                <!--<input type="radio" name="hide" ng-model="field.hide" ng-checked="field.hide==0" ng-value="0" title="否" >-->
+            <!--</div>-->
+        <!--</div>-->
+        <div>备注：带 <span  style="color: red">*</span>  均为必填项</div>
+
+<br><br><br><br>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{include file="common/foot"/}
+<script src="/public/static/admin/jquery/jquery.min.js"></script>
+<script src="__STATIC__/common/js/angular.min.js"></script>
+<!--引用富文本-->
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.js"></script>
+<script>
+    var m = angular.module('hd', []);
+    m.controller('ctrl', ['$scope', function ($scope) {
+        $scope.field = '{$info}' != 'null' ? {$info} : {id: '', title: '', url: '',recommendation: 0, sort:50, img: '',hide: 1,recommendation: 0};
+        layui.use(['form', 'layer', 'upload','laydate'], function () {
+            var form = layui.form, $ = layui.jquery, upload = layui.upload, laydate = layui.laydate;
+
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#imgBtn'
+                , url: '{:url("UpFiles/upload")}'
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#img_src').attr('src', result); //图片链接（base64）
+                    });
+                }
+                , done: function (res) {
+                    //上传成功
+                    if (res.code > 0) {
+
+                        $('#img').attr('value',res.url);
+
+                    } else {
+                        //如果上传失败
+                        return layer.msg('上传失败');
+                    }
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function () {
+                        uploadInst.upload();
+                    });
+                }
+            });
+
+            form.on('submit(submit)', function (data) {
+                // 提交到方法 默认为本身
+                data.field.ad_id = $scope.field.ad_id;
+                var loading = layer.load(1, {shade: [0.1, '#fff']});
+                $.post("", data.field, function (res) {
+                    layer.close(loading);
+                    if (res.code > 0) {
+                        layer.msg(res.msg, {time: 1800, icon: 1}, function () {
+                            location.href = res.url;
+                        });
+                    } else {
+                        layer.msg(res.msg, {time: 1800, icon: 2});
+                    }
+                });
+            });
+            var ua = UE.getEditor('container1', {});
+            ua.addListener("ready", function () {
+                // editor准备好之后才可以使用
+                ua.setContent($scope.field.content);
+            });
+        });
+    }]);
+</script>
